@@ -108,12 +108,13 @@ export class DatabaseStorage implements IStorage {
     };
     
     // Check if we already have data for this hour
+    const hourStartTime = format(safeHourlyData.hour_start, 'yyyy-MM-dd HH:00:00');
     const [existingHour] = await db.select()
       .from(hourlyTraffic)
       .where(
         and(
           eq(hourlyTraffic.store_id, safeHourlyData.store_id),
-          sql`date_trunc('hour', ${hourlyTraffic.hour_start}) = date_trunc('hour', ${safeHourlyData.hour_start})`
+          sql`CAST(${hourlyTraffic.hour_start} AS TEXT) LIKE ${hourStartTime + '%'}`
         )
       );
     
