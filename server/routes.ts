@@ -60,6 +60,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create HTTP server
   const httpServer = createServer(app);
   
+  // Initialize stores with data
+  console.log('Initializing stores with data...');
+  await Promise.all([10, 11, 12].map(storeId => storage.initializeStore(storeId)));
+  console.log('Stores initialized successfully!');
+  
   // Create WebSocket server on a specific path to avoid conflicts with Vite HMR
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
   
