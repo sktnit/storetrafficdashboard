@@ -42,7 +42,7 @@ export default function LiveEventsTable({ events }: LiveEventsTableProps) {
               const isEntry = netChange >= 0;
               
               return (
-                <tr key={event.id || index}>
+                <tr key={`event-${event.id}-${index}-${event.timestamp}`}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {format(new Date(event.timestamp), "HH:mm:ss")}
                   </td>
