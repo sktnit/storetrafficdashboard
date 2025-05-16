@@ -4,12 +4,13 @@ import { storage } from "./storage";
 import { WebSocketServer, WebSocket } from "ws";
 import { format } from "date-fns";
 import { KafkaMessage } from "@shared/schema";
+import { initializeKafka, sendKafkaMessage, disconnectKafka } from "./kafka";
 
 // Store connected clients
 const clients: Map<number, WebSocket[]> = new Map();
 
 // Function to broadcast message to all clients for a specific store
-function broadcastToStore(storeId: number, message: any): void {
+export function broadcastToStore(storeId: number, message: any): void {
   const storeClients = clients.get(storeId) || [];
   const messageStr = JSON.stringify(message);
   
@@ -20,9 +21,25 @@ function broadcastToStore(storeId: number, message: any): void {
   });
 }
 
-// Function to simulate Kafka messages
-function simulateKafkaMessages(): void {
-  // Simulate messages for stores 10, 11, and 12
+// Send message to Kafka topic and broadcast to WebSocket clients
+export async function sendStoreTrafficEvent(message: KafkaMessage): Promise<void> {
+  try {
+    // Send to Kafka
+    await sendKafkaMessage(message);
+    
+    // Broadcast to WebSocket clients
+    broadcastToStore(message.store_id, {
+      type: 'KAFKA_MESSAGE',
+      payload: message
+    });
+  } catch (error) {
+    console.error('Error sending store traffic event:', error);
+  }
+}
+
+// Function to generate test Kafka messages (for demo purposes)
+export function generateTestEvents(): void {
+  // Generate test events for stores 10, 11, and 12
   const storeIds = [10, 11, 12];
   
   setInterval(() => {
@@ -42,16 +59,8 @@ function simulateKafkaMessages(): void {
         time_stamp: timeStamp
       };
       
-      // Process the message in storage
-      storage.processKafkaMessage(kafkaMessage)
-        .then(() => {
-          // Broadcast to connected clients for this store
-          broadcastToStore(storeId, {
-            type: 'KAFKA_MESSAGE',
-            payload: kafkaMessage
-          });
-        })
-        .catch(console.error);
+      // Send to Kafka and broadcast to WebSocket clients
+      sendStoreTrafficEvent(kafkaMessage).catch(console.error);
     }
   }, 5000); // Generate a message every 5 seconds
 }
@@ -124,8 +133,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
   
-  // Start simulating Kafka messages
-  simulateKafkaMessages();
+  // Start test event generation or initialize Kafka
+  // If KAFKA_ENABLED is set, try to connect to real Kafka
+  if (process.env.KAFKA_ENABLED === 'true') {
+    try {
+      await initializeKafka();
+    } catch (err) {
+      console.error('Failed to initialize Kafka, falling back to test events:', err);
+      generateTestEvents();
+    }
+  } else {
+    // Otherwise fall back to test event generation
+    console.log('Kafka not enabled, using test event generation');
+    generateTestEvents();
+  }
   
   // API endpoints
   
