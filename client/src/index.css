@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --primary: 207 90% 54%;  /* Changed to match the design's primary blue */
+  --primary-foreground: 211 100% 99%;
+  --secondary: 221 83% 53%; /* Changed for secondary blue */
+  --secondary-foreground: 24 9.8% 10%;
+  --accent: 60 4.8% 95.9%;
+  --accent-foreground: 24 9.8% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 20 14.3% 4.1%;
+  --radius: 0.5rem;
+  --chart-1: var(--primary);
+  --chart-2: var(--destructive);
+  --chart-3: 142 71% 45%;  /* Success green */
+  --chart-4: 51 100% 50%;  /* Yellow */
+  --chart-5: 262 83% 58%;  /* Purple */
+}
+
+/* Colors from design */
+:root {
+  --success: 142 71% 45%; /* Success green color */
+  --error: 0 100% 65%;    /* Error red color */
+  --background-color: 220 14% 96%; /* Light gray background */
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --primary: 207 90% 54%;
+  --primary-foreground: 211 100% 99%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-[#F3F4F6] text-foreground;
+  }
+}
+
+/* Custom utility classes */
+.bg-success {
+  background-color: hsl(142 71% 45%);
+}
+
+.bg-error {
+  background-color: hsl(0 100% 65%);
+}
+
+.text-success {
+  color: hsl(142 71% 45%);
+}
+
+.text-error {
+  color: hsl(0 100% 65%);
+}
+
+.border-success {
+  border-color: hsl(142 71% 45%);
+}
+
+.border-error {
+  border-color: hsl(0 100% 65%);
+}
+
+.bg-success-light {
+  background-color: hsl(142 71% 95%);
+}
+
+.bg-error-light {
+  background-color: hsl(0 100% 95%);
+}
