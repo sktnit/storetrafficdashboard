@@ -58,17 +58,17 @@ export async function initializeKafka(): Promise<boolean> {
           if (message.value) {
             const messageValue = message.value.toString();
             const data = JSON.parse(messageValue) as KafkaMessage;
-            
+    
             // Process message through storage
             await storage.processKafkaMessage(data);
-            
+    
             // Broadcast to connected clients
             broadcastToStore(data.store_id, {
               type: 'KAFKA_MESSAGE',
               payload: data
             });
-            
-            // Log successful processing
+    
+            // ✅ This is the correct place for the log
             console.log(`Processed Kafka message: ${data.store_id} - in: ${data.customers_in}, out: ${data.customers_out}`);
           }
         } catch (err) {
@@ -108,6 +108,7 @@ export async function sendKafkaMessage(message: KafkaMessage): Promise<void> {
         { value: JSON.stringify(message) },
       ],
     });
+    console.log(`✅ Sent Kafka message to topic "${KAFKA_TOPIC}":`, message);
   } catch (err) {
     console.error('Failed to send Kafka message:', err);
     

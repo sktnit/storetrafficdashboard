@@ -7,9 +7,6 @@ A real-time customer tracking dashboard that displays store traffic data using W
 - **Real-time Updates**: See customer entry and exit events as they happen
 - **Live View**: Current store status and recent events
 - **Historical View**: Hourly traffic data for the last 24 hours
-- **Interactive Charts**: Visualize traffic patterns
-- **Multiple Store Support**: Switch between different store locations
-- **Responsive Design**: Works on desktop and mobile devices
 
 ## Tech Stack
 
@@ -17,7 +14,6 @@ A real-time customer tracking dashboard that displays store traffic data using W
 - **Backend**: Node.js, Express
 - **Database**: PostgreSQL
 - **Real-time Communication**: WebSockets
-- **UI Components**: Shadcn UI
 
 ## Setup Instructions
 
@@ -55,32 +51,32 @@ To start the development server:
 npm run dev
 ```
 
-The application will be available at http://localhost:5000
+4. Kafka Producer command:
+   echo '{"store_id": 10, "customers_in": 2, "customers_out": 1, "time_stamp": "12.30.00"}' | \
+   /opt/homebrew/Cellar/kafka/4.0.0/libexec/bin/kafka-console-producer.sh \
+   --bootstrap-server localhost:9092 --topic store-traffic
+
+The application will be available at http://localhost:5001
 
 ## Dashboard Overview
 
-### Live View
-- Shows current number of customers in the store
-- Displays today's entry and exit counts
-- Provides a real-time chart of traffic in 5-minute intervals
-- Lists recent entry/exit events
+### View
 
-### Historical View
-- Shows total visitors in the last 24 hours
-- Identifies peak and slowest hours
-- Provides a bar chart showing hourly traffic
-- Includes a paginated table of hourly data
+- Live Data tab: It will show the customers coming in and out of the store in real time
+- Historical Data tab: It will show the customers coming in and out of the store per hour for
+  the last 24 hrs.
 
 ## Implementation Details
 
 ### Data Flow
+
 1. Kafka messages (simulated) report customer entries and exits
 2. Backend processes these events and updates statistics
 3. WebSocket sends updates to connected clients
 4. Frontend displays the data in real-time
 
 ### Database Schema
-- `users`: Authentication data (unused in this demo)
+
 - `store_events`: Individual customer entry/exit events
 - `hourly_traffic`: Aggregated hourly traffic statistics
 

@@ -56,8 +56,8 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Use the port from environment or default to 5000
-  const port = parseInt(process.env.PORT || '5000', 10);
+  // Use the port from environment or default to 5001
+  const port = parseInt(process.env.PORT || '5001', 10);
   
   // Add error handling for server startup
   server.on('error', (error: any) => {

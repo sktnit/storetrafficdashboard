@@ -1,9 +1,6 @@
 import { 
-  users, 
   storeEvents,
   hourlyTraffic,
-  type User,
-  type InsertUser,
   type StoreEvent,
   type InsertStoreEvent,
   type HourlyTraffic, 
@@ -12,16 +9,12 @@ import {
   type StoreStats,
   type HistoricalStats
 } from "@shared/schema";
-import { format, subHours, startOfHour, endOfHour, compareAsc } from "date-fns";
+import { format, subHours, startOfHour, endOfHour } from "date-fns";
 import { db } from "./db";
 import { eq, desc, lte, gte, and, sql } from "drizzle-orm";
 
 // Storage interface
 export interface IStorage {
-  // User methods (from original)
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
   
   // Store event methods
   saveStoreEvent(event: InsertStoreEvent): Promise<StoreEvent>;
@@ -57,22 +50,6 @@ export class DatabaseStorage implements IStorage {
         lastUpdated: format(new Date(), 'HH:mm:ss')
       });
     });
-  }
-  
-  // User methods
-  async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user || undefined;
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user || undefined;
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
-    return user;
   }
   
   // Store event methods

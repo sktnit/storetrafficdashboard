@@ -14,24 +14,39 @@ export default function LiveEventsTable({ events }: LiveEventsTableProps) {
           Live
         </span>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Time
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Event
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Customers In
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Customers Out
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Net Change
               </th>
             </tr>
@@ -40,16 +55,20 @@ export default function LiveEventsTable({ events }: LiveEventsTableProps) {
             {events.map((event, index) => {
               const netChange = event.customers_in - event.customers_out;
               const isEntry = netChange >= 0;
-              
+
               return (
                 <tr key={`event-${event.id}-${index}-${event.timestamp}`}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {format(new Date(event.timestamp), "HH:mm:ss")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      isEntry ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                    }`}>
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        isEntry
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
                       {isEntry ? "Entry" : "Exit"}
                     </span>
                   </td>
@@ -59,18 +78,23 @@ export default function LiveEventsTable({ events }: LiveEventsTableProps) {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {event.customers_out}
                   </td>
-                  <td className={`px-6 py-4 whitespace-nowrap text-sm ${
-                    netChange >= 0 ? "text-success" : "text-error"
-                  }`}>
+                  <td
+                    className={`px-6 py-4 whitespace-nowrap text-sm ${
+                      netChange >= 0 ? "text-success" : "text-error"
+                    }`}
+                  >
                     {netChange >= 0 ? `+${netChange}` : netChange}
                   </td>
                 </tr>
               );
             })}
-            
+
             {events.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
+                <td
+                  colSpan={5}
+                  className="px-6 py-4 text-center text-sm text-gray-500"
+                >
                   Waiting for events...
                 </td>
               </tr>
