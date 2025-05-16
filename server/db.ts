@@ -1,25 +1,30 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import ws from "ws";
+import { Pool } from 'pg';
+import { drizzle } from 'drizzle-orm/pg-core';
 import * as schema from "@shared/schema";
 
-// Use WebSockets for Neon serverless
-neonConfig.webSocketConstructor = ws;
-
-// Provide fallback for local development
+// Get database URL from environment
 const databaseUrl = process.env.DATABASE_URL;
+
+// Log for debugging
+console.log("Connecting to database...", databaseUrl);
 
 // Check for database connection string
 if (!databaseUrl) {
-  console.warn("Warning: DATABASE_URL not set. Using local database or mock storage instead.");
+  console.warn("Warning: DATABASE_URL not set. Please set this environment variable.");
+  throw new Error("DATABASE_URL must be set. Please create a .env file or set this environment variable.");
 }
 
-// Create connection pool with connection string if available
-export const pool = databaseUrl 
-  ? new Pool({ connectionString: databaseUrl }) 
-  : undefined;
+// Create connection pool with connection string
+export const pool = new Pool({
+  connectionString: databaseUrl,
+  // Add connection timeout for development
+  connectionTimeoutMillis: 5000,
+});
 
-// Create Drizzle instance if pool is available
-export const db = pool 
-  ? drizzle({ client: pool, schema }) 
-  : undefined;
+// Test connection
+pool.query('SELECT NOW()')
+  .then(() => console.log('Database connection successful!'))
+  .catch(err => console.error('Database connection failed:', err));
+
+// Create Drizzle instance with the pool
+export const db = drizzle(pool, { schema });
